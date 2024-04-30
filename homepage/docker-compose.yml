@@ -1,0 +1,18 @@
+services:  
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v0.8.12
+    container_name: homepage
+    restart: unless-stopped
+    networks:
+      - caddy_proxy
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config:/app/config
+      - ./images:/app/public/images
+      - ${DATA_PATH}:/mnt/data
+      - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+
+networks:
+  caddy_proxy:
+    external: true

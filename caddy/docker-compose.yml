@@ -1,0 +1,22 @@
+
+services:
+  caddy:
+    image: docker.io/technoguyfication/caddy-cloudflare:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - MY_DOMAIN
+      - CLOUDFLARE_API_TOKEN
+      - ACME_AGREE=true
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_config:/config
+      - ./caddy_data:/data
+
+networks:
+  default:
+    name: caddy_proxy
+    external: true

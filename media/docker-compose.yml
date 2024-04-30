@@ -1,0 +1,151 @@
+services:
+
+  radarr:
+    image: ghcr.io/hotio/radarr:release-5.4.6.8723
+    container_name: radarr
+    restart: unless-stopped
+    ports:
+      - 7878:7878
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+      - UMASK=002
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_PATH}/radarr:/config
+      - ${DATA_PATH}:/data
+
+  sonarr:
+    image: ghcr.io/hotio/sonarr:release-4.0.4.1491
+    container_name: sonarr
+    restart: unless-stopped
+    ports:
+      - 8989:8989
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+      - UMASK=002
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_PATH}/sonarr:/config
+      - ${DATA_PATH}:/data
+
+  bazarr:
+    image: ghcr.io/hotio/bazarr:release-1.4.2
+    container_name: bazarr
+    restart: unless-stopped
+    ports:
+      - 6767:6767
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+      - UMASK=002
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_PATH}/bazarr/:/config
+      - ${DATA_PATH}/media:/data/media
+
+  prowlarr:
+    image: ghcr.io/hotio/prowlarr:release-1.16.2.4435
+    container_name: prowlarr
+    restart: unless-stopped
+    ports:
+      - 9696:9696
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - UMASK=002
+      - TZ=Europe/London
+    volumes:
+      - ${DOCKER_PATH}/prowlarr:/config:rw
+
+  jellyfin:
+    image: ghcr.io/hotio/jellyfin:release-10.8.13-1
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - 8096:8096
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+      - UMASK=002
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_PATH}/jellyfin:/config:rw
+      - ${DATA_PATH}/media:/data/media:rw
+    devices:                                        
+      - /dev/dri:/dev/dri                      
+
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9
+    container_name: qbittorrent
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+      - 50000:50000
+    cap_add:
+      - NET_ADMIN
+#   devices:                              # Optional, uncomment if you use VPN
+#     - /dev/net/tun:/dev/net/tun         # Optional, uncomment if you use VPN
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+      - UMASK=022
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_PATH}/qbittorrent:/config:rw
+      - ${DATA_PATH}/torrents:/data/torrents:rw
+
+  autobrr:
+    image: ghcr.io/autobrr/autobrr:v1.41.0
+    container_name: autobrr
+    restart: unless-stopped
+    ports:
+      - 7474:7474
+    user: ${USER_PUID}:${USER_PGID}
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - ${DOCKER_PATH}/autobrr:/config
+
+  omegabrr:
+    image: ghcr.io/autobrr/omegabrr:v1.12.1
+    container_name: omegabrr
+    restart: unless-stopped
+    ports:
+      - 7441:7441
+    user: ${USER_PUID}:${USER_PGID}
+    volumes:
+      - ${DOCKER_PATH}/omegabrr:/config
+
+  seasonpackarr:
+    image: ghcr.io/nuxencs/seasonpackarr:v0.8.4
+    container_name: seasonpackarr
+    restart: unless-stopped
+    user: ${USER_PUID}:${USER_PGID}
+    ports:
+      - 42069:42069
+    environment:
+      - SEASONPACKARR__SMART_MODE= true
+      - SEASONPACKARR__SMART_MODE_THRESHOLD= 0.75
+      - SEASONPACKARR__PARSE_TORRENT_FILE= true
+    volumes:
+      - ${DOCKER_PATH}/seasonpackarr:/config
+      - ${DATA_PATH}/torrents:/data/torrents
+
+networks:
+  default:
+    name: caddy_proxy
+    external: true
+
+####### Update Containers ##########
+# docker compose pull
+# docker compose up -d --remove-orphans
+# docker image prune

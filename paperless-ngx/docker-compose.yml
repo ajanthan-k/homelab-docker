@@ -1,0 +1,54 @@
+---
+services:
+  broker:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    networks:
+      - default
+    volumes:
+      - ./redisdata:/data
+
+  db:
+    image: docker.io/library/postgres:15
+    restart: unless-stopped
+    networks:
+      - default
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.7.2
+    container_name: paperless-ngx
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+    networks:
+      - caddy_proxy
+      - default
+    ports:
+      - 8010:8000
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      USERMAP_UID: ${USER_PUID}
+      USERMAP_GID: ${USER_PGID}
+      PAPERLESS_OCR_LANGUAGES: eng kor
+      PAPERLESS_TIME_ZONE: Europe/London
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_URL: ${PAPERLESS_URL}
+    volumes:
+      - ./export:/usr/src/paperless/export
+      - ./consume:/usr/src/paperless/consume
+      - ${STORAGE_PATH}/paperless/data:/usr/src/paperless/data
+      - ${STORAGE_PATH}/paperless/media:/usr/src/paperless/media
+
+networks:
+  caddy_proxy:
+    external: true
+  default:
+    driver: bridge

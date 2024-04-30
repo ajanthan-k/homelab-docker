@@ -1,0 +1,23 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:v1.27.6-ls139
+    container_name: syncthing
+    restart: unless-stopped
+    networks:
+      - caddy_proxy
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    environment:
+      - PUID=${USER_PUID}
+      - PGID=${USER_PGID}
+      - TZ=Europe/London
+    volumes:
+      - ./config:/config
+      - ./data:/data
+
+networks:
+  caddy_proxy:
+    external: true

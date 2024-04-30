@@ -1,0 +1,15 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2024.4.4
+    container_name: homeassistant
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - homeassistant_data:/config
+
+volumes:
+  homeassistant_data:
+    name: homeassistant_data
+    external: true
