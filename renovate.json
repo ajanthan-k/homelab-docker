@@ -3,4 +3,11 @@
   "extends": [
     "config:recommended"
   ]
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["postgres", "redis"],
+      "matchManagers": ["docker-compose"],
+      "enabled": false
+    }
+  ]
 }
