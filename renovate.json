@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended"
   ],
-  "schedule": "before 5:00am",
+  "schedule": "after 1am and before 5:00am",
+  "timezone": "Europe/London",
   "packageRules": [
     {
       "matchPackagePatterns": ["postgres", "redis"],
