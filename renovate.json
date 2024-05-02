@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": "before 5:00am",
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["postgres", "redis"],
+      "matchManagers": ["docker-compose"],
+      "enabled": false
+    }
+  ]
+}
