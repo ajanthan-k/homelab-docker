@@ -3,6 +3,7 @@
 BASE_DIR="/docker"              # Set the base directory to /docker
 LOG_FILE="/tmp/dccd.log"        # Default log file name
 REMOTE_BRANCH="main"            # Default remote branch name
+PRUNE=0                         # Default prune setting (not pruning)
 
 log_message() {
     local message="$1"
@@ -58,9 +59,9 @@ update_compose_files() {
     fi
 
     # Check if PRUNE is provided
-    if [ $PRUNE -eq 1 ]; then
+    if [ "$PRUNE" -eq 1 ]; then
         log_message "STATE: Pruning images"
-        docker image prune --all --force
+        docker image prune -a --force
     fi
 
     log_message "STATE: Done!"
