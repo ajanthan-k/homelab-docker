@@ -1,5 +1,6 @@
 /*
 !.gitignore
+!docker_cd.sh
 
 !media/
 !caddy/
