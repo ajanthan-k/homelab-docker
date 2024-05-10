@@ -104,7 +104,7 @@ services:
       - ${DATA_PATH}/torrents:/data/torrents:rw
 
   autobrr:
-    image: ghcr.io/autobrr/autobrr:v1.41.0
+    image: ghcr.io/autobrr/autobrr:v1.42.0
     container_name: autobrr
     restart: unless-stopped
     ports:
