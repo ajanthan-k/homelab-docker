@@ -49,7 +49,7 @@ services:
       - ${DATA_PATH}/media:/data/media
 
   prowlarr:
-    image: ghcr.io/hotio/prowlarr@sha256:da0390fa89a4e407f48d099fbe030f5fa31b86779bdc90049f13d25df948f150
+    image: ghcr.io/hotio/prowlarr@sha256:86c8df98581bb2bc345e99f92ec0714931feaf36c4a1fafe76f867fe0b95b302
     container_name: prowlarr
     restart: unless-stopped
     ports:
