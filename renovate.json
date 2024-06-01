@@ -10,6 +10,11 @@
       "matchPackagePatterns": ["postgres", "redis"],
       "matchManagers": ["docker-compose"],
       "enabled": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchManagers": ["docker-compose"],
+      "pinDigests": true
     }
   ]
 }
