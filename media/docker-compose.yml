@@ -1,7 +1,7 @@
 services:
 
   radarr:
-    image: ghcr.io/hotio/radarr:release-5.4.6.8723
+    image: ghcr.io/hotio/radarr:release-5.4.6.8723@sha256:fd72dadaa553e8f3e04cb745bd4c458c6270118d36aa6ec286b3c7286b69dbea
     container_name: radarr
     restart: unless-stopped
     ports:
@@ -33,7 +33,7 @@ services:
       - ${DATA_PATH}:/data
 
   bazarr:
-    image: ghcr.io/hotio/bazarr:release-1.4.2
+    image: ghcr.io/hotio/bazarr:release-1.4.2@sha256:8e46859ce55658b734b2ae7b7dd626091782199a7e024ea1d740d237ecd1d0ca
     container_name: bazarr
     restart: unless-stopped
     ports:
@@ -49,7 +49,7 @@ services:
       - ${DATA_PATH}/media:/data/media
 
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-1.16.2.4435
+    image: ghcr.io/hotio/prowlarr:release-1.16.2.4435@sha256:da0390fa89a4e407f48d099fbe030f5fa31b86779bdc90049f13d25df948f150
     container_name: prowlarr
     restart: unless-stopped
     ports:
@@ -63,7 +63,7 @@ services:
       - ${DOCKER_PATH}/prowlarr:/config:rw
 
   jellyfin:
-    image: ghcr.io/hotio/jellyfin:release-10.8.13-1
+    image: ghcr.io/hotio/jellyfin:release-10.8.13-1@sha256:eea6afed7c8f344ddb4c21dde96f75257cbc8f5e143fa9ef86a0149d500a3f1f
     container_name: jellyfin
     restart: unless-stopped
     ports:
@@ -81,7 +81,7 @@ services:
       - /dev/dri:/dev/dri                      
 
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9
+    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:8ec96b21b7b4405c1f65f5d3c2931bee1bab3f401ba03968dc6ee16bbf8091b1
     container_name: qbittorrent
     restart: unless-stopped
     ports:
@@ -104,7 +104,7 @@ services:
       - ${DATA_PATH}/torrents:/data/torrents:rw
 
   autobrr:
-    image: ghcr.io/autobrr/autobrr:v1.42.0
+    image: ghcr.io/autobrr/autobrr:v1.42.0@sha256:c38f2d0f31a63b98285049524115b238dbb9f1a39d5f60269dd8e9a19de7ebae
     container_name: autobrr
     restart: unless-stopped
     ports:
@@ -116,7 +116,7 @@ services:
       - ${DOCKER_PATH}/autobrr:/config
 
   omegabrr:
-    image: ghcr.io/autobrr/omegabrr:v1.13.0
+    image: ghcr.io/autobrr/omegabrr:v1.13.0@sha256:6183c29ca6f73c658f9484737fd452a7f4be9425e1638bf7fcfb618f1467eded
     container_name: omegabrr
     restart: unless-stopped
     ports:
@@ -126,7 +126,7 @@ services:
       - ${DOCKER_PATH}/omegabrr:/config
 
   seasonpackarr:
-    image: ghcr.io/nuxencs/seasonpackarr:v0.8.5
+    image: ghcr.io/nuxencs/seasonpackarr:v0.8.5@sha256:ed80490212a7d08215ffd1bed58c64f5fb0470f552976037edb8e2b8ce5df551
     container_name: seasonpackarr
     restart: unless-stopped
     user: ${USER_PUID}:${USER_PGID}
