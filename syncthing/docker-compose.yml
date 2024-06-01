@@ -1,6 +1,6 @@
 services:
   syncthing:
-    image: lscr.io/linuxserver/syncthing:v1.27.6-ls139
+    image: lscr.io/linuxserver/syncthing:v1.27.6-ls139@sha256:0f69786427f711e506fefd6eb66645817dbf99c91b7d37860158bb504e63f756
     container_name: syncthing
     restart: unless-stopped
     networks:

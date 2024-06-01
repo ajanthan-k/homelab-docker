@@ -1,7 +1,7 @@
 
 services:
   tdarr:
-    image: ghcr.io/haveagitgat/tdarr:2.18.02
+    image: ghcr.io/haveagitgat/tdarr:2.18.02@sha256:fd1b63bce97269f145a99dfe8209faffbf1cc46f5d5f27561c8310bc99755f20
     container_name: tdarr
     restart: unless-stopped
     networks:
