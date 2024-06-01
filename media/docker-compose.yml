@@ -1,7 +1,7 @@
 services:
 
   radarr:
-    image: ghcr.io/hotio/radarr:release-5.4.6.8723@sha256:fd72dadaa553e8f3e04cb745bd4c458c6270118d36aa6ec286b3c7286b69dbea
+    image: ghcr.io/hotio/radarr@sha256:fd72dadaa553e8f3e04cb745bd4c458c6270118d36aa6ec286b3c7286b69dbea
     container_name: radarr
     restart: unless-stopped
     ports:
@@ -33,7 +33,7 @@ services:
       - ${DATA_PATH}:/data
 
   bazarr:
-    image: ghcr.io/hotio/bazarr:release-1.4.2@sha256:8e46859ce55658b734b2ae7b7dd626091782199a7e024ea1d740d237ecd1d0ca
+    image: ghcr.io/hotio/bazarr@sha256:8e46859ce55658b734b2ae7b7dd626091782199a7e024ea1d740d237ecd1d0ca
     container_name: bazarr
     restart: unless-stopped
     ports:
@@ -49,7 +49,7 @@ services:
       - ${DATA_PATH}/media:/data/media
 
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-1.16.2.4435@sha256:da0390fa89a4e407f48d099fbe030f5fa31b86779bdc90049f13d25df948f150
+    image: ghcr.io/hotio/prowlarr@sha256:da0390fa89a4e407f48d099fbe030f5fa31b86779bdc90049f13d25df948f150
     container_name: prowlarr
     restart: unless-stopped
     ports:
@@ -63,7 +63,7 @@ services:
       - ${DOCKER_PATH}/prowlarr:/config:rw
 
   jellyfin:
-    image: ghcr.io/hotio/jellyfin:release-10.8.13-1@sha256:eea6afed7c8f344ddb4c21dde96f75257cbc8f5e143fa9ef86a0149d500a3f1f
+    image: ghcr.io/hotio/jellyfin@sha256:eea6afed7c8f344ddb4c21dde96f75257cbc8f5e143fa9ef86a0149d500a3f1f
     container_name: jellyfin
     restart: unless-stopped
     ports:
@@ -81,7 +81,7 @@ services:
       - /dev/dri:/dev/dri                      
 
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:8ec96b21b7b4405c1f65f5d3c2931bee1bab3f401ba03968dc6ee16bbf8091b1
+    image: ghcr.io/hotio/qbittorrent@sha256:8ec96b21b7b4405c1f65f5d3c2931bee1bab3f401ba03968dc6ee16bbf8091b1
     container_name: qbittorrent
     restart: unless-stopped
     ports:
