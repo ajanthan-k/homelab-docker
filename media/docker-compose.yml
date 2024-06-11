@@ -17,7 +17,7 @@ services:
       - ${DATA_PATH}:/data
 
   sonarr:
-    image: ghcr.io/hotio/sonarr@sha256:939b29f85dc8bd91b1b1dc058806d8ee82bc1002a2736618e3c2f385f87a034e
+    image: ghcr.io/hotio/sonarr@sha256:8e034ac5f5845ba9cea6d6826a70eb4f176bc0991677d8bfee83a495abb70891
     container_name: sonarr
     restart: unless-stopped
     ports:
