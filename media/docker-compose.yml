@@ -1,7 +1,7 @@
 services:
 
   radarr:
-    image: ghcr.io/hotio/radarr@sha256:c478b86b6e58b072cf78a88820530e0f351d50ae5a0dcb856dd2baf94b8abc14
+    image: ghcr.io/hotio/radarr@sha256:cc0d767a9b5f922538b1f48912ff394a4d119d533bdd4f63c02db75e0bfd5108
     container_name: radarr
     restart: unless-stopped
     ports:
