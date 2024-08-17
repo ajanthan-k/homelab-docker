@@ -21,7 +21,8 @@
     },
     {
       "matchPackageNames": [
-        "ghcr.io/hotio/bazarr"
+        "ghcr.io/hotio/bazarr",
+        "ghcr.io/hotio/jellyfin"
       ],
       "versioning": "regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
