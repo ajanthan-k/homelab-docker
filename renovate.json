@@ -4,6 +4,10 @@
     "config:recommended"
   ],
   "timezone": "Europe/London",
+  "schedule": [
+    "after 10pm every weekday",
+    "before 5am every weekday",
+  ],
   "packageRules": [
     {
       "matchPackagePatterns": ["postgres", "redis"],
@@ -14,6 +18,39 @@
       "matchDatasources": ["docker"],
       "matchManagers": ["docker-compose"],
       "pinDigests": true
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/hotio/bazarr"
+      ],
+      "versioning": "regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/hotio/lidarr",
+        "ghcr.io/hotio/radarr",
+        "ghcr.io/hotio/prowlarr",
+        "ghcr.io/hotio/sonarr"
+      ],
+      "versioning": "regex:^release-(?<major>\\d+).(?<minor>\\d+).(?<patch>\\d+)\\.(?<revision>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/linuxserver/qbittorrent"
+      ],
+      "allowedVersions": "<=4"
+    },
+    {
+      "description": "Automatically merge minor and patch-level updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "branch"
     }
-  ]
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": true,
 }
