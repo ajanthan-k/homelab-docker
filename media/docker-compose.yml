@@ -1,7 +1,7 @@
 services:
 
   radarr:
-    image: ghcr.io/hotio/radarr@sha256:237bbecf5ed6c3bfac9958336e191bcaa209b71182c99298560d790c922753c7
+    image: ghcr.io/hotio/radarr:release-5.8.3.8933@sha256:237bbecf5ed6c3bfac9958336e191bcaa209b71182c99298560d790c922753c7
     container_name: radarr
     restart: unless-stopped
     ports:
@@ -17,7 +17,7 @@ services:
       - ${DATA_PATH}:/data
 
   sonarr:
-    image: ghcr.io/hotio/sonarr@sha256:2318423ecc4cef1956acd551fe82896e3aa4598815be74c3c62ae35e889f8aab
+    image: ghcr.io/hotio/sonarr:release-4.0.8.1874@sha256:2318423ecc4cef1956acd551fe82896e3aa4598815be74c3c62ae35e889f8aab
     container_name: sonarr
     restart: unless-stopped
     ports:
@@ -33,7 +33,7 @@ services:
       - ${DATA_PATH}:/data
 
   bazarr:
-    image: ghcr.io/hotio/bazarr@sha256:850ba7e5b502558aaecca9e2fc2967aba67aa7adbece1aad3dbc89fa869ddf95
+    image: ghcr.io/hotio/bazarr:release-1.4.3@sha256:850ba7e5b502558aaecca9e2fc2967aba67aa7adbece1aad3dbc89fa869ddf95
     container_name: bazarr
     restart: unless-stopped
     ports:
@@ -49,7 +49,7 @@ services:
       - ${DATA_PATH}/media:/data/media
 
   prowlarr:
-    image: ghcr.io/hotio/prowlarr@sha256:381867b0faa02ed2874fcfaccba4d27fc9de792f3b67c4463ddd82331cf37442
+    image: ghcr.io/hotio/prowlarr:release-1.21.2.4649@sha256:381867b0faa02ed2874fcfaccba4d27fc9de792f3b67c4463ddd82331cf37442
     container_name: prowlarr
     restart: unless-stopped
     ports:
@@ -63,7 +63,7 @@ services:
       - ${DOCKER_PATH}/prowlarr:/config:rw
 
   jellyfin:
-    image: ghcr.io/hotio/jellyfin@sha256:7cd71a6762195d7cc2da415cf249d349e2772b7284b4fddcda991932436e231d
+    image: ghcr.io/hotio/jellyfin:release-10.9.9@sha256:7cd71a6762195d7cc2da415cf249d349e2772b7284b4fddcda991932436e231d
     container_name: jellyfin
     restart: unless-stopped
     ports:
@@ -81,7 +81,7 @@ services:
       - /dev/dri:/dev/dri                      
 
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent@sha256:8ec96b21b7b4405c1f65f5d3c2931bee1bab3f401ba03968dc6ee16bbf8091b1
+    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:fe153b9e8b1bfff0b799cec2f704714d52bf981bc67596a198dc276e0a928e70
     container_name: qbittorrent
     restart: unless-stopped
     ports:
