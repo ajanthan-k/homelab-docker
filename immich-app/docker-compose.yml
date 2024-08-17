@@ -2,11 +2,11 @@ name: immich
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:v1.112.1
     container_name: immich_server
+    restart: unless-stopped
     devices:
       - /dev/dri:/dev/dri
-    restart: unless-stopped
     networks:
       - default
       - caddy_proxy
@@ -20,17 +20,21 @@ services:
     depends_on:
       - redis
       - database
+    healthcheck:
+      disable: false
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:v1.112.1
     container_name: immich_machine_learning
+    restart: unless-stopped
     networks:
       - default
     volumes:
       - model-cache:/cache
     env_file:
       - .env
-    restart: unless-stopped
+    healthcheck:
+      disable: false
 
   redis:
     container_name: immich_redis

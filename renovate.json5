@@ -10,7 +10,7 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["postgres", "redis"],
+      "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs"],
       "matchManagers": ["docker-compose"],
       "enabled": false
     },
