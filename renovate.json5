@@ -10,7 +10,7 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs", "tika"],
+      "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs", "tika", "gotenberg"],
       "matchManagers": ["docker-compose"],
       "enabled": false
     },
