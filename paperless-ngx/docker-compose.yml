@@ -37,16 +37,35 @@ services:
       PAPERLESS_DBHOST: db
       USERMAP_UID: ${USER_PUID}
       USERMAP_GID: ${USER_PGID}
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
       PAPERLESS_OCR_LANGUAGES: eng kor
       PAPERLESS_TIME_ZONE: Europe/London
       PAPERLESS_OCR_LANGUAGE: eng
       PAPERLESS_URL: ${PAPERLESS_URL}
     volumes:
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
-      - ${STORAGE_PATH}/paperless/data:/usr/src/paperless/data
-      - ${STORAGE_PATH}/paperless/media:/usr/src/paperless/media
+      - ${STORAGE_PATH}/paperless/export:/usr/src/paperless/export
+      - ${STORAGE_PATH}/paperless/consume:/usr/src/paperless/consume
+      - ./data:/usr/src/paperless/data
+      - ./paperless/media:/usr/src/paperless/media
 
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:8.7
+    restart: unless-stopped
+    networks:
+      - default
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+
+  tika:
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
+    networks:
+      - default
+    
 networks:
   caddy_proxy:
     external: true
