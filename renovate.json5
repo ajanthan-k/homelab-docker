@@ -6,7 +6,7 @@
   "timezone": "Europe/London",
   "schedule": [
     "after 10pm every weekday",
-    "before 5am every weekday",
+    "before 5am every weekday"
   ],
   "packageRules": [
     {
@@ -49,9 +49,11 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "branch"
+      "automergeType": "branch",
+      "automergeStrategy": "squash"
     }
   ],
   "dependencyDashboard": true,
   "dependencyDashboardAutoclose": true,
+  "platformAutomerge": true
 }
