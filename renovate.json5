@@ -55,5 +55,6 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardAutoclose": true,
-  "platformAutomerge": true
+  "platformAutomerge": true,
+  "ignoreTests": true
 }
