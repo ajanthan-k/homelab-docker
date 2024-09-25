@@ -126,7 +126,7 @@ services:
       - ${DOCKER_PATH}/omegabrr:/config
 
   seasonpackarr:
-    image: ghcr.io/nuxencs/seasonpackarr:v0.9.0@sha256:2cef5c6f7470f26827874dd95cf1f91c85c072a3b64fdedbd3fd9eaf281e4168
+    image: ghcr.io/nuxencs/seasonpackarr:v0.10.0@sha256:9b05ce53c7ff327f9263e531d76171fec8b74cf8866049547199136400c90c56
     container_name: seasonpackarr
     restart: unless-stopped
     user: ${USER_PUID}:${USER_PGID}
