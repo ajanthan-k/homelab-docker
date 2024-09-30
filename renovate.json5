@@ -4,10 +4,7 @@
     "config:recommended"
   ],
   "timezone": "Europe/London",
-  "schedule": [
-    "after 10pm every weekday",
-    "before 5am every weekday"
-  ],
+  "schedule": ["after 11pm", "before 7am"],
   "packageRules": [
     {
       "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs", "tika", "gotenberg"],
@@ -42,19 +39,40 @@
       "allowedVersions": "<=4"
     },
     {
-      "description": "Automatically merge minor and patch-level updates",
+      "description": "Group Immich updates",
+      "groupName": "Immich",
+      "matchPackagePatterns": [
+        "^ghcr.io/immich-app/immich-"
+      ],
+      "groupSlug": "immich"
+    },
+    {
+      "description": "Automatically merge patch-level updates for Immich",
+      "matchPackagePatterns": [
+        "^ghcr.io/immich-app/immich-"
+      ],
       "matchUpdateTypes": [
-        "minor",
         "patch",
         "digest"
       ],
       "automerge": true,
       "automergeType": "branch",
-      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Automatically merge minor and patch-level updates for all packages except Immich",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "excludePackagePatterns": [
+        "^ghcr.io/immich-app/immich-"
+      ],
+      "automerge": true,
+      "automergeType": "branch",
     }
   ],
   "dependencyDashboard": true,
   "dependencyDashboardAutoclose": true,
-  "platformAutomerge": true,
   "ignoreTests": true
 }
