@@ -11,7 +11,7 @@ services:
       - default
       - caddy_proxy
     ports:
-      - 2283:3001
+      - 2283:2283
     volumes:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
