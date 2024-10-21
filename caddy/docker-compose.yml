@@ -1,7 +1,7 @@
 
 services:
   caddy:
-    image: docker.io/technoguyfication/caddy-cloudflare:latest@sha256:d67afcdcbcee59e86683a514b76608cbee100586b8f5ac222244be4b09a5dbde
+    image: docker.io/technoguyfication/caddy-cloudflare:latest@sha256:ba743b27953e3d88c7be252493f3b4be2d9a6a40943845a9de33decf7557d970
     container_name: caddy
     restart: unless-stopped
     ports:
