@@ -81,7 +81,7 @@ services:
       - /dev/dri:/dev/dri                      
 
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:d51b9c74bfd1e7324836adb9a0d3e6cab8e530b1d47ba18644570e17ebbd0877
+    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:d0ef5869c4d76ef0bad4b87e84a101b43689c31cb2f08c2fcebf2cdf2197d63b
     container_name: qbittorrent
     restart: unless-stopped
     ports:
