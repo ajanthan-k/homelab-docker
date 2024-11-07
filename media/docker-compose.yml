@@ -116,7 +116,7 @@ services:
       - ${DOCKER_PATH}/autobrr:/config
 
   omegabrr:
-    image: ghcr.io/autobrr/omegabrr:v1.14.0@sha256:6f65c7967609746662815933ecc8168c8c25a3b82d909f49833fcce2b47ee052
+    image: ghcr.io/autobrr/omegabrr:v1.15.0@sha256:4f6099a76ff9d248e9f032e29c04a92b483f21456e46f3b01eb20399f4732ad0
     container_name: omegabrr
     restart: unless-stopped
     ports:
