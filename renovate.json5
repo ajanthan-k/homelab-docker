@@ -72,6 +72,7 @@
       "automergeType": "branch",
     }
   ],
+  "fetchChangeLogs": pr,
   "dependencyDashboard": true,
   "dependencyDashboardAutoclose": true,
   "ignoreTests": true
