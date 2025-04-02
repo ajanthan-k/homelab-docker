@@ -7,16 +7,19 @@
   "schedule": ["after 11pm", "before 7am"],
   "packageRules": [
     {
+      "description": "Disable updates for specific infrastructure images",
       "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs", "tika", "gotenberg"],
       "matchManagers": ["docker-compose"],
       "enabled": false
     },
     {
+      "description": "Pin digests for all docker-compose managed images (digest included when tag changes)",
       "matchDatasources": ["docker"],
       "matchManagers": ["docker-compose"],
       "pinDigests": true
     },
     {
+      "description": "Custom versioning for hotio bazarr/jellyfin",
       "matchPackageNames": [
         "ghcr.io/hotio/bazarr",
         "ghcr.io/hotio/jellyfin"
@@ -24,6 +27,7 @@
       "versioning": "regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
     {
+      "description": "Custom versioning for hotio lidarr/radarr/prowlarr/sonarr",
       "matchPackageNames": [
         "ghcr.io/hotio/lidarr",
         "ghcr.io/hotio/radarr",
@@ -33,18 +37,33 @@
       "versioning": "regex:^release-(?<major>\\d+).(?<minor>\\d+).(?<patch>\\d+)\\.(?<revision>\\d+)$"
     },
     {
+      "description": "Limit qbittorrent to v4.x",
       "matchPackageNames": [
         "ghcr.io/linuxserver/qbittorrent"
       ],
       "allowedVersions": "<=4"
     },
     {
-      "description": "Group Immich updates",
+      "description": "Group Immich updates and provide source URL for changelogs",
       "groupName": "Immich",
       "matchPackagePatterns": [
         "^ghcr.io/immich-app/immich-"
       ],
-      "groupSlug": "immich"
+      "groupSlug": "immich",
+      "sourceUrl": "https://github.com/immich-app/immich"
+    },
+    {
+      "description": "Configure Jellyfin (hotio): Set changelog source and disable all automerge",
+      "matchPackageNames": ["ghcr.io/hotio/jellyfin"],
+      "sourceUrl": "https://github.com/jellyfin/jellyfin",
+      "automerge": false // Disable automerge completely for Jellyfin
+    },
+    {
+      "description": "Configure Home Assistant: Set changelog source and disable automerge for minor updates",
+      "matchPackageNames": ["ghcr.io/home-assistant/home-assistant"], // Adjust if your package name is different
+      "sourceUrl": "https://github.com/home-assistant/core",
+      "matchUpdateTypes": ["minor"],
+      "automerge": false // Disable automerge for minor updates
     },
     {
       "description": "Automatically merge patch-level updates for Immich",
@@ -52,25 +71,27 @@
         "^ghcr.io/immich-app/immich-"
       ],
       "matchUpdateTypes": [
-        "patch",
-        "digest"
+        "patch"
       ],
       "automerge": true,
-      "automergeType": "branch",
+      "automergeType": "branch"
     },
     {
-      "description": "Automatically merge minor and patch-level updates for all packages except Immich",
+      "description": "Automatically merge minor and patch-level updates for most packages (excluding digest-only, Immich, Jellyfin, HA minor)",
       "matchUpdateTypes": [
         "minor",
-        "patch",
-        "digest"
+        "patch" // Removed "digest"
       ],
       "excludePackagePatterns": [
         "^ghcr.io/immich-app/immich-"
       ],
+      "excludePackageNames": [
+        "ghcr.io/hotio/jellyfin", // Exclude Jellyfin (handled by its specific rule)
+        "ghcr.io/home-assistant/home-assistant" // Exclude HA (partially handled by its specific rule)
+      ],
       "automerge": true,
-      "automergeType": "branch",
-    }
+      "automergeType": "branch"
+    },
   ],
   "fetchChangeLogs": "pr",
   "dependencyDashboard": true,
