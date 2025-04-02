@@ -12,6 +12,8 @@ services:
       - ./images:/app/public/images
       - ${DATA_PATH}:/mnt/data
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+    environment:
+        HOMEPAGE_ALLOWED_HOSTS: internal.ajanthank.com
 
 networks:
   caddy_proxy:
