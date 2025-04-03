@@ -77,10 +77,11 @@
       "automergeType": "branch"
     },
     {
-      "description": "Automatically merge minor and patch-level updates for most packages (excluding digest-only, Immich, Jellyfin, HA minor)",
+      "description": "Automatically merge minor and patch-level updates for most packages (excluding Immich, Jellyfin, HA minor)",
       "matchUpdateTypes": [
         "minor",
-        "patch" // Removed "digest"
+        "patch",
+        "digest"
       ],
       "excludePackagePatterns": [
         "^ghcr.io/immich-app/immich-"
