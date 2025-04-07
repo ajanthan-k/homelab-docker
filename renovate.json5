@@ -40,6 +40,18 @@
       "versioning": "regex:^release-(?<major>\\d+).(?<minor>\\d+).(?<patch>\\d+)\\.(?<revision>\\d+)$"
     },
 
+    // --- General Automerge Rule ---
+    {
+      "description": "Automatically merge minor, patch, and digest updates (unless disabled subsequently)",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "branch"
+    },
+
     // --- Specific Package Configs & Automerge Exceptions ---
     {
       "description": "Limit qbittorrent to v4.x",
@@ -78,18 +90,6 @@
       ],
       "matchUpdateTypes": ["minor"],
       "automerge": false
-    },
-
-    // --- General Automerge Rule (applied after exceptions) ---
-    {
-      "description": "Automatically merge minor, patch, and digest updates (unless disabled by a previous rule)",
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
-      "automerge": true,
-      "automergeType": "branch"
     }
   ],
   "fetchChangeLogs": "pr",
