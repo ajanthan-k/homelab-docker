@@ -33,7 +33,7 @@ services:
       - ${DATA_PATH}:/data
 
   bazarr:
-    image: ghcr.io/hotio/bazarr:release-1.5.1@sha256:3fa7481e757e4b19397a65b73a33d7e888cd588a30ea5b6aef5db8f635281a23
+    image: ghcr.io/hotio/bazarr:release-1.5.1@sha256:fc8f42ffe6494e8045689a29380f82a23d9ac11497ee925a2c10ced583ca9df3
     container_name: bazarr
     restart: unless-stopped
     ports:
