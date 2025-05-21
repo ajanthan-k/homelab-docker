@@ -63,7 +63,7 @@ services:
       - ${DOCKER_PATH}/prowlarr:/config:rw
 
   jellyfin:
-    image: ghcr.io/hotio/jellyfin:release-10.10.7@sha256:30bb2d73e705f615c72945e1f2b086546fbaa7f7357838f56b625e3ac2c6acfb
+    image: ghcr.io/hotio/jellyfin:release-10.10.7@sha256:09d443c6502e00229f8785ef1b6dd29d1a905a7ba33ebe2ab3cae4e5ee00133c
     container_name: jellyfin
     restart: unless-stopped
     ports:
