@@ -2,7 +2,7 @@ name: immich
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:v1.131.3@sha256:7e5b6729b12b5e5cc5d98bcc6f7c27f723fabae4ee77696855808ebd5200bbf8
+    image: ghcr.io/immich-app/immich-server:v1.133.1@sha256:1daaf09ba61066184aad6e4f524b13e20f8884cb2030c314438e34cce9358b2c
     container_name: immich_server
     restart: unless-stopped
     devices:
