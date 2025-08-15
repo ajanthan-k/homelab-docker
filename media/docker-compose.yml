@@ -102,6 +102,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_PATH}/qbittorrent:/config:rw
+      - ${DOCKER_PATH}/qbittorrent/VueTorrent:/app/vuetorrent
       - ${DATA_PATH}/torrents:/data/torrents:rw
 
   autobrr:
