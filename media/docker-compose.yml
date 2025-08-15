@@ -81,7 +81,7 @@ services:
       - /dev/dri:/dev/dri                      
 
   qbittorrent:
-    image: ghcr.io/hotio/qbittorrent:legacy-4.3.9@sha256:f9ecc16a9aa96a3dce696a6038b06482da0ab240b9e5a7881867ec7915fb10f6
+    image: ghcr.io/hotio/qbittorrent:release-5.1.2
     container_name: qbittorrent
     restart: unless-stopped
     ports:
@@ -96,8 +96,9 @@ services:
     environment:
       - PUID=${USER_PUID}
       - PGID=${USER_PGID}
+      - UMASK=002
       - TZ=Europe/London
-      - UMASK=022
+      - LIBTORRENT=v1
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_PATH}/qbittorrent:/config:rw
