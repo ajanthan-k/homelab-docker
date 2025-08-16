@@ -1,0 +1,19 @@
+services:
+  couchdb-obsidian-livesync:
+    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master
+    container_name: couchdb-obsidian-livesync
+    restart: unless-stopped
+    environment:
+      SERVER_URL: ${SERVER_URL}
+      COUCHDB_USER: ${COUCHDB_USER}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+      COUCHDB_DATABASE: ${COUCHDB_DATABASE}
+    ports:
+      - 5984:5984
+    volumes:
+      - ./data:/opt/couchdb/data
+
+networks:
+  default:
+    name: caddy_proxy
+    external: true

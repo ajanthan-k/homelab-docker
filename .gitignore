@@ -10,7 +10,8 @@
 !paperless-ngx/
 !portainer/
 !syncthing/
-!tdarr/
+!karakeep/
+!obsidian-livesync/
 
 media/*
 caddy/*
@@ -20,8 +21,8 @@ immich-app/*
 paperless-ngx/*
 portainer/*
 syncthing/*
-tdarr/*
-
+karakeep/*
+obsidian-livesync/*
 
 !media/docker-compose.yml
 !caddy/docker-compose.yml
@@ -31,4 +32,5 @@ tdarr/*
 !paperless-ngx/docker-compose.yml
 !portainer/docker-compose.yml
 !syncthing/docker-compose.yml
-!tdarr/docker-compose.yml
+!karakeep/docker-compose.yml
+!obsidian-livesync/docker-compose.yml
