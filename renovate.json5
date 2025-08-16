@@ -5,6 +5,9 @@
   ],
   "timezone": "Europe/London",
   "schedule": ["after 11pm", "before 7am"],
+
+  "docker-compose": { "digest": { "enabled": false } },
+
   "packageRules": [
     // --- Disables & Global Settings ---
     {
@@ -42,11 +45,10 @@
 
     // --- General Automerge Rule ---
     {
-      "description": "Automatically merge minor, patch, and digest updates (unless disabled subsequently)",
+      "description": "Automatically merge minor and patch updates (unless disabled subsequently)",
       "matchUpdateTypes": [
         "minor",
         "patch",
-        "digest"
       ],
       "automerge": true,
       "automergeType": "branch"
