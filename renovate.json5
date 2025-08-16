@@ -12,7 +12,14 @@
     // --- Disables & Global Settings ---
     {
       "description": "Disable updates for specific infrastructure images",
-      "matchPackagePatterns": ["postgres", "redis", "pgvecto-rs", "tika", "gotenberg"],
+      "matchPackageNames": [
+        "docker.io/redis",
+        "docker.io/tensorchord/pgvecto-rs",
+        "getmeili/meilisearch",
+        "gcr.io/zenika-hub/alpine-chrome",
+        "docker.io/gotenberg/gotenberg",
+        "docker.io/apache/tika"
+      ],
       "matchManagers": ["docker-compose"],
       "enabled": false
     },
@@ -55,13 +62,6 @@
     },
 
     // --- Specific Package Configs & Automerge Exceptions ---
-    {
-      "description": "Limit qbittorrent to v4.x",
-      "matchPackageNames": [
-        "ghcr.io/linuxserver/qbittorrent"
-      ],
-      "allowedVersions": "<=4"
-    },
     {
       "description": "Group Immich updates and provide source URL",
       "groupName": "Immich",
