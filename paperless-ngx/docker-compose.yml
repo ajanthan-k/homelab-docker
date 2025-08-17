@@ -1,7 +1,7 @@
 ---
 services:
   broker:
-    image: docker.io/library/redis:7
+    image: docker.io/library/redis:7@sha256:4421962706d7a901cbd435282515704040203d67c653160e3a46a27b79c40e19
     restart: unless-stopped
     networks:
       - default
@@ -9,7 +9,7 @@ services:
       - ./redisdata:/data
 
   db:
-    image: docker.io/library/postgres:15
+    image: docker.io/library/postgres:15@sha256:bc51cf4f1fe02cce7ed2370b20128a9b00b4eb804573a77d2a0d877aaa9c82b1
     restart: unless-stopped
     networks:
       - default
