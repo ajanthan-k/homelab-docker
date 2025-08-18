@@ -12,13 +12,14 @@
     // --- Disables & Global Settings ---
     {
       "description": "Disable updates for specific infrastructure images",
-      "matchPackageNames": [
-        "docker.io/redis",
-        "docker.io/tensorchord/pgvecto-rs",
-        "getmeili/meilisearch",
-        "gcr.io/zenika-hub/alpine-chrome",
-        "docker.io/gotenberg/gotenberg",
-        "docker.io/apache/tika"
+      "matchPackagePatterns": [
+        "redis",
+        "postgres",
+        "pgvecto-rs",
+        "meilisearch",
+        "alpine-chrome",
+        "gotenberg",
+        "tika"
       ],
       "matchManagers": ["docker-compose"],
       "enabled": false
