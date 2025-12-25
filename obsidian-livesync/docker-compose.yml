@@ -1,6 +1,6 @@
 services:
   couchdb-obsidian-livesync:
-    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master@sha256:0f34c148f580e1d0c827e2aec10ffa334f419270e90e8ca9e63c2ed6b0afd315
+    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:latest@sha256:6a99266f794e23026018e0b6c5bd83fe21f35475c6fb3980283f7ee6371d95a1
     container_name: couchdb-obsidian-livesync
     restart: unless-stopped
     environment:
