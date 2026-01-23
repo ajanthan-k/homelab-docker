@@ -1,6 +1,6 @@
 services:
   homeassistant:
-    image: ghcr.io/home-assistant/home-assistant:2025.10.4@sha256:449140e073d8d7814098cd62dfdbb326ad043f51a3c4d4721889369f46751d52
+    image: ghcr.io/home-assistant/home-assistant:2026.1.3@sha256:c36741490472518338323db8ee67775d7df70d2fa1f68eff9b9e63679fe64a18
     container_name: homeassistant
     restart: unless-stopped
     network_mode: host
