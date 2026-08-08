@@ -78,7 +78,24 @@ services:
       - ${DOCKER_PATH}/jellyfin:/config:rw
       - ${DATA_PATH}/media:/data/media:rw
     devices:                                        
-      - /dev/dri:/dev/dri                      
+      - /dev/dri:/dev/dri
+
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/London
+    volumes:
+      - ${DOCKER_PATH}/seerr/config:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    restart: unless-stopped      
 
   qbittorrent:
     image: ghcr.io/hotio/qbittorrent:release-5.1.2@sha256:d774ab1c15158ab4c51ad56c3ece0079a3ebf21f39daf9d1a9f0616fab5f1f98
