@@ -1,7 +1,7 @@
 
 services:
   portainer:
-    image: portainer/portainer-ce:2.45.0@sha256:efdd92144178ac25aa211bb35277157d97301c3734d22e50b64cf9f76674fcee
+    image: portainer/portainer-ce:2.45.1@sha256:4d616db18cfeb5dd41a69c0958bc825c84483ea9cde1106eb82a5d26f3bd8b0e
     container_name: portainer
     restart: always
     networks:
