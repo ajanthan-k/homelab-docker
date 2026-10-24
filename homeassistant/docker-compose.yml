@@ -3,13 +3,9 @@ services:
     image: ghcr.io/home-assistant/home-assistant:2026.8.3@sha256:14931c6b13756317849f46da1d01b45937a1150db66c081cfe529d48215943fe
     container_name: homeassistant
     restart: unless-stopped
+    stop_grace_period: 60s
     network_mode: host
     environment:
       - TZ=Europe/London
     volumes:
-      - homeassistant_data:/config
-
-volumes:
-  homeassistant_data:
-    name: homeassistant_data
-    external: true
+      - ./config:/config
