@@ -12,6 +12,7 @@
 !syncthing/
 !karakeep/
 !obsidian-livesync/
+!dawarich/
 
 media/*
 caddy/*
@@ -23,6 +24,7 @@ portainer/*
 syncthing/*
 karakeep/*
 obsidian-livesync/*
+dawarich/*
 
 !media/docker-compose.yml
 !caddy/docker-compose.yml
@@ -34,3 +36,4 @@ obsidian-livesync/*
 !syncthing/docker-compose.yml
 !karakeep/docker-compose.yml
 !obsidian-livesync/docker-compose.yml
+!dawarich/docker-compose.yml

@@ -1,0 +1,109 @@
+services:
+  dawarich_redis:
+    image: docker.io/library/redis:7.4-alpine@sha256:57e4255cc971b1c8d6f8a6ca283ac01bc3ecdd914273ef6bfaede87aaecd6541
+    container_name: dawarich_redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --save 900 1
+      --save 300 10
+      --appendonly no
+    networks:
+      - default
+    volumes:
+      - ./shared:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  dawarich_db:
+    image: docker.io/postgis/postgis:17-3.5-alpine@sha256:894f570c0cf0664ed5576a8fd5d5bfb8fb1b19d592885b686c3a88c8bd90c41f
+    container_name: dawarich_db
+    restart: unless-stopped
+    shm_size: 1G
+    networks:
+      - default
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./shared:/var/shared
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  dawarich_app:
+    image: docker.io/freikin/dawarich:1.17.0@sha256:207dc86f8baa8fcf5b585f31186bf81b55added9c102a96f308d640e964ea60f
+    container_name: dawarich_app
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    entrypoint: web-entrypoint.sh
+    command: ['bin/rails', 'server', '-p', '3000', '-b', '::']
+    stop_grace_period: 60s
+    networks:
+      - caddy_proxy
+      - default
+    ports:
+      - 3003:3000
+    volumes:
+      - ./public:/var/app/public
+      - ./watched:/var/app/tmp/imports/watched
+      - ./storage:/var/app/storage
+      - ./db:/dawarich_db_data
+    environment:
+      RAILS_ENV: production
+      REDIS_URL: redis://dawarich_redis:6379
+      DATABASE_HOST: dawarich_db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: ${POSTGRES_DB}
+      APPLICATION_HOSTS: ${APPLICATION_HOSTS}
+      APPLICATION_PROTOCOL: http
+      TIME_ZONE: Europe/London
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      RAILS_LOG_TO_STDOUT: "true"
+      SELF_HOSTED: "true"
+      STORE_GEODATA: "true"
+      PROMETHEUS_EXPORTER_ENABLED: "false"
+      SIDEKIQ_EMBEDDED: "true"
+      WEB_CONCURRENCY: "0"
+      BACKGROUND_PROCESSING_CONCURRENCY: 2
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'" ]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+    depends_on:
+      dawarich_db:
+        condition: service_healthy
+        restart: true
+      dawarich_redis:
+        condition: service_healthy
+        restart: true
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 4G
+
+networks:
+  caddy_proxy:
+    external: true
+  default:
+    driver: bridge
