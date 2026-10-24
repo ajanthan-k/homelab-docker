@@ -1,0 +1,16 @@
+services:
+  executor:
+    image: ghcr.io/usefulsoftwareco/executor-selfhost:2.0.0-beta.28-amd64@sha256:b2f735c1ec44ce191cd35c6c6b89a2db16a08ae242837796e08c8e5c850691a5
+    container_name: executor-v2
+    restart: unless-stopped
+    stop_grace_period: 60s
+    # Share host networking to reach the local-only HA-MCP server.
+    network_mode: host
+    environment:
+      HOST: 127.0.0.1
+      PORT: "4400"
+      BETTER_AUTH_URL: http://localhost:4400
+      EXECUTOR_APPS_ALLOW_PRIVATE_FETCH: "true"
+      EXECUTOR_APP_WORKERS: "8"
+    volumes:
+      - ./data:/app/data
