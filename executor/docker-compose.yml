@@ -7,10 +7,14 @@ services:
     # Share host networking to reach the local-only HA-MCP server.
     network_mode: host
     environment:
-      HOST: 127.0.0.1
+      # Only Caddy's private Docker network can reach the dashboard directly.
+      HOST: 172.22.0.1
       PORT: "4400"
-      BETTER_AUTH_URL: http://localhost:4400
+      BETTER_AUTH_URL: https://mcp.internal.ajanthank.com
       EXECUTOR_APPS_ALLOW_PRIVATE_FETCH: "true"
       EXECUTOR_APP_WORKERS: "8"
     volumes:
       - ./data:/app/data
+    # The image probes 127.0.0.1 regardless of HOST; Caddy checks /health instead.
+    healthcheck:
+      disable: true
