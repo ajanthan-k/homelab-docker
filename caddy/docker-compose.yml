@@ -12,7 +12,7 @@ services:
       - CLOUDFLARE_API_TOKEN
       - ACME_AGREE=true
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./conf:/etc/caddy
       - ./caddy_config:/config
       - ./caddy_data:/data
 
