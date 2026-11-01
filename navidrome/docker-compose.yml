@@ -1,0 +1,153 @@
+services:
+  navidrome:
+    image: navidrome/navidrome:0.64.2@sha256:38dc2727bfcfd5ede290f8ada114fc90368146f265ae4701ddddbcbe2a44ee52
+    container_name: navidrome
+    user: "${MUSIC_UID:-1000}:${MUSIC_GID:-1000}"
+    ports:
+      - "${MUSIC_BIND_IP:-192.168.50.50}:4533:4533"
+    restart: unless-stopped
+    environment:
+      TZ: Europe/London
+      ND_MUSICFOLDER: /music
+      # NFS does not reliably deliver filesystem watch events; poll as well.
+      ND_SCANNER_SCHEDULE: "@every 5m"
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_ENABLETRANSCODINGCONFIG: "true"
+      ND_DEFAULTDOWNSAMPLINGFORMAT: opus
+    volumes:
+      - ./data:/data
+      - type: bind
+        source: ${MUSIC_PATH:-/mnt/data/media/music}
+        target: /music
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:4533/ping]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  soulbeet:
+    image: docker.io/docccccc/soulbeet:full@sha256:8064d59f57941bcd7e360d4efd6a4f9c6b0bc428659bed49164ca1f3619d2419
+    container_name: soulbeet
+    user: "${MUSIC_UID:-1000}:${MUSIC_GID:-1000}"
+    restart: unless-stopped
+    ports:
+      - "${MUSIC_BIND_IP:-192.168.50.50}:9765:9765"
+    environment:
+      TZ: Europe/London
+      DATABASE_URL: sqlite:/data/soulbeet.db
+      DOWNLOAD_PATH: /downloads
+      SECRET_KEY: ${SOULBEET_SECRET_KEY:?Generate a persistent random SOULBEET_SECRET_KEY in .env}
+      NAVIDROME_URL: http://navidrome:4533
+      BEETS_CONFIG: /config/config.yaml
+      # Album mode enables release tags and the album cover-art pipeline.
+      BEETS_ALBUM_MODE: "${BEETS_ALBUM_MODE:-true}"
+      RUST_LOG: info
+    volumes:
+      - ./soulbeet-data:/data
+      - ./beets:/config:ro
+      - type: bind
+        source: ${DOWNLOADS_PATH:-/mnt/data/soulseek/downloads}
+        target: /downloads
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MUSIC_PATH:-/mnt/data/media/music}
+        target: /music
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${TIDAL_DOWNLOADS_PATH:-/mnt/data/tidal/downloads}
+        target: /tidal
+        bind:
+          create_host_path: false
+    depends_on:
+      navidrome:
+        condition: service_healthy
+      slskd:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, /usr/bin/python3, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9765/login', timeout=4).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  tidarr:
+    image: cstaelen/tidarr:1.2.8@sha256:e714986410febbe7327d44c4e9db14d08ffbeff16860b81aa90e1ee60b0e3ed3
+    container_name: tidarr
+    restart: unless-stopped
+    ports:
+      - "${MUSIC_BIND_IP:-192.168.50.50}:8484:8484"
+    environment:
+      TZ: Europe/London
+      PUID: "${MUSIC_UID:-1000}"
+      PGID: "${MUSIC_GID:-1000}"
+      UMASK: "0022"
+      ADMIN_PASSWORD: ${TIDARR_ADMIN_PASSWORD:?Set a Tidarr web password in .env}
+      JWT_SECRET: ${TIDARR_JWT_SECRET:?Generate a persistent Tidarr JWT secret in .env}
+      ENABLE_HISTORY: "true"
+      ENABLE_BEETS: "false"
+      REPLAY_GAIN: "false"
+      PLAYLIST_ALBUMS: "false"
+      # Keep downloads lossless; select high/max in the private tiddl config.
+      LOCK_QUALITY: "true"
+    volumes:
+      - ./tidarr-data:/shared
+      - type: bind
+        source: ${TIDAL_PROCESSING_PATH:-/mnt/data/tidal/processing}
+        target: /shared/.processing
+        bind:
+          create_host_path: false
+      # Tidarr's output is staging, not the finished Navidrome library.
+      - type: bind
+        source: ${TIDAL_DOWNLOADS_PATH:-/mnt/data/tidal/downloads}
+        target: /music
+        bind:
+          create_host_path: false
+
+  slskd:
+    image: slskd/slskd:0.26.2@sha256:d0963a3e5b16facd295bf4f2156dad0182f246b1b21a032cae12f5494c694843
+    container_name: slskd
+    user: "${MUSIC_UID:-1000}:${MUSIC_GID:-1000}"
+    restart: unless-stopped
+    ports:
+      - "${MUSIC_BIND_IP:-192.168.50.50}:5030:5030"
+      # Soulseek peer connections; optional router TCP forwarding uses this port.
+      - "50300:50300/tcp"
+    environment:
+      TZ: Europe/London
+      SLSKD_REMOTE_CONFIGURATION: "true"
+      SLSKD_DOWNLOADS_DIR: /downloads
+      SLSKD_INCOMPLETE_DIR: /incomplete
+      SLSKD_UMASK: "0022"
+      SLSKD_USERNAME: ${SLSKD_WEB_USERNAME:-ajanthan}
+      SLSKD_PASSWORD: ${SLSKD_WEB_PASSWORD:?Generate a random SLSKD_WEB_PASSWORD in .env}
+      SLSKD_API_KEY: "role=ReadWrite;${SLSKD_API_KEY:?Generate a random SLSKD_API_KEY in .env}"
+    volumes:
+      - ./slskd-data:/app
+      - type: bind
+        source: ${DOWNLOADS_PATH:-/mnt/data/soulseek/downloads}
+        target: /downloads
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${INCOMPLETE_PATH:-/mnt/data/soulseek/incomplete}
+        target: /incomplete
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:5030/health]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  default:
+    name: caddy_proxy
+    external: true

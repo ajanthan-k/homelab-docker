@@ -14,6 +14,8 @@
 !obsidian-livesync/
 !dawarich/
 !executor/
+!navidrome/
+!music-assistant/
 
 media/*
 caddy/*
@@ -27,6 +29,13 @@ karakeep/*
 obsidian-livesync/*
 dawarich/*
 executor/*
+navidrome/*
+music-assistant/*
+!music-assistant/docker-compose.yml
+!navidrome/docker-compose.yml
+!navidrome/beets/
+navidrome/beets/*
+!navidrome/beets/config.yaml
 
 !media/docker-compose.yml
 !caddy/docker-compose.yml
