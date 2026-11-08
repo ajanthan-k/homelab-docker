@@ -1,79 +1,57 @@
 #!/bin/bash
+# Pulls /docker from GitHub and redeploys any stack whose compose file changed.
 
-BASE_DIR="/docker"              # Set the base directory to /docker
-LOG_FILE="/tmp/dccd.log"        # Default log file name
-REMOTE_BRANCH="main"            # Default remote branch name
-PRUNE=0                         # Default prune setting (not pruning)
-
-log_message() {
-    local message="$1"
-    echo "$(date +'%Y-%m-%d %H:%M:%S') - $message" | tee -a "$LOG_FILE"
-}
-
-update_compose_files() {
-    cd "$BASE_DIR" || { log_message "ERROR: Directory doesn't exist, exiting..."; exit 127; }
-
-    # Make sure we're in a git repo
-    if [ ! -d .git ]; then
-        log_message "ERROR: Directory is not a git repository, exiting..."
-        exit 1
-    else
-        log_message "INFO:  Git repository found!"
-    fi
-
-    # Check if there are any changes in the Git repository
-    if ! git fetch origin; then
-        log_message "ERROR: Unable to fetch changes from the remote repository (the server may be offline or unreachable)"
-        exit 1
-    fi
-
-    # Check for uncommitted local changes
-    uncommitted_changes=$(git status --porcelain)
-    if [ -n "$uncommitted_changes" ]; then
-        log_message "ERROR: Uncommitted changes detected in $BASE_DIR, exiting..."
-        exit 1
-    fi
-
-    # Get the list of changed files
-    changed_files=$(git diff --name-only HEAD origin/$REMOTE_BRANCH)
-
-    if [ -n "$changed_files" ]; then
-        log_message "STATE: Changes detected, updating..."
-
-        # Pull the changes from the remote repository
-        if ! git pull --quiet origin "$REMOTE_BRANCH"; then
-            log_message "ERROR: Unable to pull changes from the remote repository (the server may be offline or unreachable)"
-            exit 1
-        fi
-
-        # Iterate over the changed files
-        while IFS= read -r file; do
-            # Check if the file is a Docker Compose file
-            if [[ "$file" == *"docker-compose.yml" || "$file" == *"docker-compose.yaml" ]]; then
-                log_message "STATE: Redeploying compose file for $file"
-                docker compose -f "$file" up -d --quiet-pull
-            fi
-        done <<< "$changed_files"
-    else
-        log_message "STATE: No changes detected, nothing to do"
-    fi
-
-    # Check if PRUNE is provided
-    if [ "$PRUNE" -eq 1 ]; then
-        log_message "STATE: Pruning images"
-        docker image prune -a --force
-    fi
-
-    log_message "STATE: Done!"
-}
-
-touch "$LOG_FILE"
+# Wrapped in { } so bash reads the whole script before running it,
+# since the git merge below may update this file.
 {
-  echo "########################################"
-  echo "# Starting!"
-  echo "########################################"
-} >> "$LOG_FILE"
+    LOG_FILE=/tmp/dccd.log
+    STATE_FILE=.git/dccd-deployed   # last commit that was deployed
 
-log_message "INFO:  Base directory is set to $BASE_DIR"
+    log() {
+        echo "$(date '+%F %T') - $*" | tee -a "$LOG_FILE"
+    }
 
-update_compose_files
+    cd /docker || exit 1
+
+    # 1. Update the repo. Git refuses if a file edited locally also changed upstream.
+    if ! git fetch -q origin; then
+        log "ERROR: fetch failed"
+        exit 1
+    fi
+
+    if ! git merge -q --ff-only origin/main; then
+        log "ERROR: fast-forward failed, see git status"
+        exit 1
+    fi
+
+    # 2. Work out what changed since the last deploy.
+    current=$(git rev-parse HEAD)
+    last_deployed=$(cat "$STATE_FILE" 2>/dev/null)
+
+    if ! git cat-file -e "$last_deployed^{commit}" 2>/dev/null; then
+        last_deployed=$current
+    fi
+
+    changed_files=$(git diff --name-only --diff-filter=d "$last_deployed" "$current" \
+        -- '*docker-compose.yml' '*docker-compose.yaml')
+
+    # 3. Redeploy changed stacks. Only record the deploy if all succeeded,
+    #    so failures are retried next run.
+    all_ok=true
+
+    for file in $changed_files; do
+        log "Redeploying $file"
+
+        if ! docker compose -f "$file" up -d --quiet-pull; then
+            log "ERROR: redeploy failed for $file"
+            all_ok=false
+        fi
+    done
+
+    if $all_ok; then
+        echo "$current" > "$STATE_FILE"
+    fi
+
+    $all_ok
+    exit
+}
