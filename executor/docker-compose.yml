@@ -1,18 +1,23 @@
 services:
   executor:
-    image: ghcr.io/usefulsoftwareco/executor-selfhost:2.0.0-beta.28-amd64@sha256:b2f735c1ec44ce191cd35c6c6b89a2db16a08ae242837796e08c8e5c850691a5
+    image: ghcr.io/usefulsoftwareco/executor-selfhost:2.0.0-beta.37@sha256:23b1f96c4098b48ec8bdf71da76bcd6c656ea7c2d390d96287d82442c39d7230
     container_name: executor-v2
     restart: unless-stopped
     stop_grace_period: 60s
+    mem_limit: 1g
+    memswap_limit: 1g
     # Share host networking to reach the local-only HA-MCP server.
     network_mode: host
     environment:
-      # Only Caddy's private Docker network can reach the dashboard directly.
       HOST: 172.22.0.1
       PORT: "4400"
       BETTER_AUTH_URL: https://mcp.internal.ajanthank.com
       EXECUTOR_APPS_ALLOW_PRIVATE_FETCH: "true"
-      EXECUTOR_APP_WORKERS: "8"
+      EXECUTOR_APP_WORKERS: "2"
+      EXECUTOR_APP_WORKER_IDLE_SECONDS: "60"
+      # Logs-only export disables traces and leaves Motel idle.
+      # Intentionally closed loopback port; Docker still keeps server logs.
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://127.0.0.1:9/v1/logs
     volumes:
       - ./data:/app/data
     # The image probes 127.0.0.1 regardless of HOST; Caddy checks /health instead.
