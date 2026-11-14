@@ -50,6 +50,11 @@
 
     if $all_ok; then
         echo "$current" > "$STATE_FILE"
+
+        # Remove the old image versions replaced by the redeploys.
+        if [ -n "$changed_files" ]; then
+            docker image prune -f >/dev/null && log "Pruned dangling images"
+        fi
     fi
 
     $all_ok
