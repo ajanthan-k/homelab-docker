@@ -151,10 +151,8 @@ services:
     user: ${USER_PUID}:${USER_PGID}
     ports:
       - 42069:42069
-    environment:
-      - SEASONPACKARR__SMART_MODE= true
-      - SEASONPACKARR__SMART_MODE_THRESHOLD= 0.75
-      - SEASONPACKARR__PARSE_TORRENT_FILE= true
+    # Settings live in ${DOCKER_PATH}/seasonpackarr/config.yaml. v1 refuses to start if
+    # SEASONPACKARR__PARSE_TORRENT_FILE (or other removed v0 env vars) is set.
     volumes:
       - ${DOCKER_PATH}/seasonpackarr:/config
       - ${DATA_PATH}/torrents:/data/torrents
