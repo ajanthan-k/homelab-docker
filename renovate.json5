@@ -1,25 +1,17 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'config:recommended',
+    'config:best-practices',
+    ':automergeMinor',
+    ':automergeBranch',
+    ':disableDigestUpdates',
+    ':timezone(Europe/London)',
   ],
-  timezone: 'Europe/London',
-  schedule: [
-    'after 11pm',
-    'before 7am',
-  ],
-  'docker-compose': {
-    digest: {
-      enabled: false,
-    },
-  },
+  schedule: ['* 23,0-6 * * *'],
+  ignoreTests: true,
   packageRules: [
     {
-      description: 'Disable updates for specific infrastructure images',
-      matchManagers: [
-        'docker-compose',
-      ],
-      enabled: false,
+      description: 'Databases and sidecars: update manually',
       matchPackageNames: [
         '/redis/',
         '/postgres/',
@@ -29,103 +21,29 @@
         '/gotenberg/',
         '/tika/',
       ],
+      enabled: false,
     },
     {
-      description: 'Pin digests for all docker-compose managed images (digest included when tag changes)',
-      matchDatasources: [
-        'docker',
-      ],
-      matchManagers: [
-        'docker-compose',
-      ],
-      pinDigests: true,
+      description: 'hotio tags: release-X.Y[.Z[.B]] (nightly- for Sonarr v5 beta; compatibility keeps each image on its channel)',
+      matchPackageNames: ['ghcr.io/hotio/**'],
+      versioning: 'regex:^(?<compatibility>release|nightly)-(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?(\\.(?<build>\\d+))?$',
     },
+    { matchPackageNames: ['ghcr.io/hotio/bazarr'], sourceUrl: 'https://github.com/morpheus65535/bazarr' },
+    { matchPackageNames: ['ghcr.io/hotio/jellyfin'], sourceUrl: 'https://github.com/jellyfin/jellyfin' },
+    { matchPackageNames: ['ghcr.io/hotio/prowlarr'], sourceUrl: 'https://github.com/Prowlarr/Prowlarr' },
+    { matchPackageNames: ['ghcr.io/hotio/qbittorrent'], sourceUrl: 'https://github.com/qbittorrent/qBittorrent' },
+    { matchPackageNames: ['ghcr.io/hotio/radarr'], sourceUrl: 'https://github.com/Radarr/Radarr' },
+    { matchPackageNames: ['ghcr.io/hotio/sonarr'], sourceUrl: 'https://github.com/Sonarr/Sonarr' },
     {
-      description: 'Custom versioning for hotio bazarr',
-      matchPackageNames: [
-        'ghcr.io/hotio/bazarr',
-      ],
-      versioning: 'regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$',
-    },
-    {
-      description: 'Custom versioning for hotio jellyfin (major.minor since v12)',
-      matchPackageNames: [
-        'ghcr.io/hotio/jellyfin',
-      ],
-      versioning: 'regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?$',
-    },
-    {
-      description: 'Custom versioning for hotio lidarr/radarr/prowlarr/sonarr',
-      matchPackageNames: [
-        'ghcr.io/hotio/lidarr',
-        'ghcr.io/hotio/radarr',
-        'ghcr.io/hotio/prowlarr',
-      ],
-      versioning: 'regex:^release-(?<major>\\d+).(?<minor>\\d+).(?<patch>\\d+)\\.(?<revision>\\d+)$',
-    },
-    {
-      description: 'Automatically merge minor and patch updates (unless disabled subsequently)',
-      matchUpdateTypes: [
-        'minor',
-        'patch',
-      ],
-      automerge: true,
-      automergeType: 'branch',
-    },
-    {
-      description: 'Group Immich updates and provide source URL',
-      groupName: 'Immich',
-      groupSlug: 'immich',
-      sourceUrl: 'https://github.com/immich-app/immich',
-      matchPackageNames: [
-        '/^ghcr.io/immich-app/immich-/',
-      ],
-    },
-    {
-      description: 'Configure Jellyfin (hotio): Set changelog source and disable automerge for MINOR and PATCH updates',
-      matchPackageNames: [
-        'ghcr.io/hotio/jellyfin',
-      ],
-      sourceUrl: 'https://github.com/jellyfin/jellyfin',
-      matchUpdateTypes: [
-        'minor',
-        'patch',
-      ],
+      description: 'Never automerge: Jellyfin (DB migrations), Sonarr (on beta)',
+      matchPackageNames: ['ghcr.io/hotio/jellyfin', 'ghcr.io/hotio/sonarr'],
       automerge: false,
     },
     {
-      description: 'Configure Home Assistant: Set changelog source and disable automerge for MINOR updates',
-      matchPackageNames: [
-        'ghcr.io/home-assistant/home-assistant',
-      ],
-      sourceUrl: 'https://github.com/home-assistant/core',
-      matchUpdateTypes: [
-        'minor',
-      ],
-      automerge: false,
-    },
-    {
-      description: 'Configure Immich: Disable automerge for MINOR updates',
-      matchUpdateTypes: [
-        'minor',
-      ],
-      automerge: false,
-      matchPackageNames: [
-        '/^ghcr.io/immich-app/immich-/',
-      ],
-    },
-    {
-      description: 'Sonarr is on the v5 beta (hotio nightly-5.x = Sonarr develop builds). Switch back to release-* versioning once v5 is stable.',
-      matchPackageNames: [
-        'ghcr.io/hotio/sonarr',
-      ],
-      versioning: 'regex:^nightly-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<revision>\\d+)$',
-      sourceUrl: 'https://github.com/Sonarr/Sonarr',
+      description: 'Review minor updates manually (breaking changes ship in minors)',
+      matchPackageNames: ['ghcr.io/home-assistant/home-assistant', 'ghcr.io/immich-app/**'],
+      matchUpdateTypes: ['minor'],
       automerge: false,
     },
   ],
-  fetchChangeLogs: 'pr',
-  dependencyDashboard: true,
-  dependencyDashboardAutoclose: true,
-  ignoreTests: true,
 }
