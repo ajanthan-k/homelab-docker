@@ -41,12 +41,18 @@
       pinDigests: true,
     },
     {
-      description: 'Custom versioning for hotio bazarr/jellyfin',
+      description: 'Custom versioning for hotio bazarr',
       matchPackageNames: [
         'ghcr.io/hotio/bazarr',
-        'ghcr.io/hotio/jellyfin',
       ],
       versioning: 'regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$',
+    },
+    {
+      description: 'Custom versioning for hotio jellyfin (major.minor since v12)',
+      matchPackageNames: [
+        'ghcr.io/hotio/jellyfin',
+      ],
+      versioning: 'regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?$',
     },
     {
       description: 'Custom versioning for hotio lidarr/radarr/prowlarr/sonarr',
