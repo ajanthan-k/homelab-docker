@@ -54,7 +54,6 @@
         'ghcr.io/hotio/lidarr',
         'ghcr.io/hotio/radarr',
         'ghcr.io/hotio/prowlarr',
-        'ghcr.io/hotio/sonarr',
       ],
       versioning: 'regex:^release-(?<major>\\d+).(?<minor>\\d+).(?<patch>\\d+)\\.(?<revision>\\d+)$',
     },
@@ -108,6 +107,15 @@
       matchPackageNames: [
         '/^ghcr.io/immich-app/immich-/',
       ],
+    },
+    {
+      description: 'Sonarr is on the v5 beta (hotio nightly-5.x = Sonarr develop builds). Switch back to release-* versioning once v5 is stable.',
+      matchPackageNames: [
+        'ghcr.io/hotio/sonarr',
+      ],
+      versioning: 'regex:^nightly-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<revision>\\d+)$',
+      sourceUrl: 'https://github.com/Sonarr/Sonarr',
+      automerge: false,
     },
   ],
   fetchChangeLogs: 'pr',
