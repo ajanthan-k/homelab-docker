@@ -8,6 +8,9 @@ services:
     memswap_limit: 1g
     # Share host networking to reach the local-only HA-MCP server.
     network_mode: host
+    env_file:
+      - path: .env  # SSO_* (pocket-id OIDC)
+        required: false
     environment:
       HOST: 172.22.0.1
       PORT: "4400"

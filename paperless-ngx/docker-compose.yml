@@ -44,6 +44,10 @@ services:
       PAPERLESS_TIME_ZONE: Europe/London
       PAPERLESS_OCR_LANGUAGE: eng
       PAPERLESS_URL: ${PAPERLESS_URL}
+      # OIDC login via pocket-id; provider JSON (incl. secret) lives in .env
+      PAPERLESS_APPS: ${PAPERLESS_APPS:-}
+      PAPERLESS_SOCIALACCOUNT_PROVIDERS: ${PAPERLESS_SOCIALACCOUNT_PROVIDERS:-}
+      PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS: ${PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS:-true}
     volumes:
       - ${STORAGE_PATH}/paperless/export:/usr/src/paperless/export
       - ${STORAGE_PATH}/paperless/consume:/usr/src/paperless/consume

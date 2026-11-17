@@ -78,6 +78,15 @@ services:
       SIDEKIQ_EMBEDDED: "true"
       WEB_CONCURRENCY: "0"
       BACKGROUND_PROCESSING_CONCURRENCY: 2
+      # OIDC login via pocket-id (client id/secret in .env). Links to the
+      # existing account by email; never auto-creates users.
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_REDIRECT_URI: ${OIDC_REDIRECT_URI:-}
+      OIDC_PROVIDER_NAME: Pocket ID
+      OIDC_PKCE_ENABLED: "true"
+      OIDC_AUTO_REGISTER: "false"
     logging:
       driver: json-file
       options:
