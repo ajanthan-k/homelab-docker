@@ -15,6 +15,7 @@
       matchPackageNames: [
         '/redis/',
         '/postgres/',
+        '/postgis/',
         '/pgvecto-rs/',
         '/meilisearch/',
         '/alpine-chrome/',
